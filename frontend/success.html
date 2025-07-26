@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to FlySnipe Premium!</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .success-animation { animation: slideInUp 0.6s ease-out; }
+        @keyframes slideInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .premium-badge { background: linear-gradient(45deg, #8B5CF6, #EC4899); }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+    <!-- Success Content -->
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="success-animation bg-white rounded-2xl shadow-xl max-w-md w-full p-8 text-center">
+            <!-- Success Icon -->
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            
+            <!-- Title -->
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">Welcome to Premium!</h1>
+            <p class="text-gray-600 mb-6">Your FlySnipe Premium subscription is now active</p>
+            
+            <!-- Premium Badge -->
+            <div class="premium-badge text-white px-4 py-2 rounded-full inline-block mb-6">
+                <span class="font-semibold">✈️ FlySnipe Premium</span>
+            </div>
+            
+            <!-- Features Unlocked -->
+            <div class="text-left mb-8">
+                <h3 class="font-semibold text-gray-900 mb-4">You now have access to:</h3>
+                <ul class="space-y-2">
+                    <li class="flex items-center text-green-600">
+                        <span class="mr-2">✓</span>
+                        <span class="text-gray-700">Unlimited flight search results</span>
+                    </li>
+                    <li class="flex items-center text-green-600">
+                        <span class="mr-2">✓</span>
+                        <span class="text-gray-700">Advanced filters and sorting</span>
+                    </li>
+                    <li class="flex items-center text-green-600">
+                        <span class="mr-2">✓</span>
+                        <span class="text-gray-700">Price tracking and alerts</span>
+                    </li>
+                    <li class="flex items-center text-green-600">
+                        <span class="mr-2">✓</span>
+                        <span class="text-gray-700">Exclusive deals and discounts</span>
+                    </li>
+                    <li class="flex items-center text-green-600">
+                        <span class="mr-2">✓</span>
+                        <span class="text-gray-700">Priority customer support</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+                <button id="startSearching" class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                    Start Searching Flights
+                </button>
+                <button id="closeWindow" class="w-full bg-gray-200 text-gray-700 font-medium py-3 rounded-lg hover:bg-gray-300 transition-colors">
+                    Close Window
+                </button>
+            </div>
+            
+            <!-- Support Link -->
+            <p class="text-sm text-gray-500 mt-6">
+                Need help? <a href="mailto:support@flysnipe.com" class="text-blue-600 hover:underline">Contact Support</a>
+            </p>
+        </div>
+    </div>
+    
+    <!-- Confetti Animation (Optional) -->
+    <div id="confetti" class="fixed inset-0 pointer-events-none">
+        <!-- Confetti particles will be added here -->
+    </div>
+
+    <script src="success.js"></script>
+</body>
+</html>
