@@ -91,6 +91,22 @@ class PremiumUpgrade(BaseModel):
     email: str
     stripe_session_id: Optional[str] = None
 
+class PaymentTransaction(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    email: str
+    package_id: str
+    amount: float
+    currency: str
+    session_id: str
+    payment_status: str = "pending"
+    metadata: Optional[Dict] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
+
+class CheckoutRequest(BaseModel):
+    package_id: str
+    email: Optional[str] = None
+
 # Mock flight data generator
 def generate_mock_flights(from_city: str, to_city: str, departure_date: str, premium: bool = False) -> List[Flight]:
     airlines = [
