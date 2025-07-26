@@ -157,7 +157,7 @@ def generate_mock_flights(from_city: str, to_city: str, departure_date: str, pre
             duration=f"{duration_minutes // 60}h {duration_minutes % 60}m",
             duration_minutes=duration_minutes,
             price=base_price,
-            **{"class": random.choice(class_types)},
+            class_type=random.choice(class_types),
             stops=random.choice([0, 0, 0, 1, 1, 2]),  # Mostly direct flights
             baggage="1 checked bag included" if random.choice([True, False]) else None,
             booking_url=f"https://www.example-airline.com/book/{uuid.uuid4()}"
