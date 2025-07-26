@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlySnipe</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body { width: 380px; min-height: 500px; }
+        .flight-card:hover { transform: translateY(-2px); transition: all 0.3s ease; }
+        .premium-badge { background: linear-gradient(45deg, #8B5CF6, #EC4899); }
+        .loading-spinner { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4">
+        <div class="flex items-center justify-between">
+            <h1 class="text-xl font-bold">FlySnipe</h1>
+            <div id="userSection" class="hidden">
+                <span id="userEmail" class="text-sm opacity-90"></span>
+                <button id="logoutBtn" class="ml-2 text-xs underline">Logout</button>
+            </div>
+            <button id="loginBtn" class="bg-white/20 px-3 py-1 rounded text-sm hover:bg-white/30">
+                Login with Google
+            </button>
+        </div>
+    </div>
+
+    <!-- Search Section -->
+    <div class="p-4 border-b">
+        <div class="flex space-x-2 mb-3">
+            <input 
+                type="text" 
+                id="fromCity" 
+                placeholder="From (e.g., Geneva)" 
+                class="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+            <input 
+                type="text" 
+                id="toCity" 
+                placeholder="To (e.g., Tokyo)" 
+                class="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+        </div>
+        <div class="flex space-x-2 mb-3">
+            <input 
+                type="date" 
+                id="departDate" 
+                class="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+            <select id="passengers" class="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <option value="1">1 Passenger</option>
+                <option value="2">2 Passengers</option>
+                <option value="3">3 Passengers</option>
+                <option value="4">4+ Passengers</option>
+            </select>
+        </div>
+        <button 
+            id="searchBtn" 
+            class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+            Search Flights
+        </button>
+    </div>
+
+    <!-- Loading -->
+    <div id="loadingSection" class="hidden p-4 text-center">
+        <div class="loading-spinner w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-2"></div>
+        <p class="text-gray-600">Searching flights...</p>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" class="hidden">
+        <!-- Premium Upgrade Banner -->
+        <div id="premiumBanner" class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-3 m-4 rounded-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="font-semibold text-sm">Go Premium</p>
+                    <p class="text-xs opacity-90">Unlock unlimited searches & advanced filters</p>
+                </div>
+                <button id="upgradeBtn" class="bg-white text-purple-600 px-3 py-1 rounded text-sm font-semibold hover:bg-gray-100">
+                    Upgrade
+                </button>
+            </div>
+        </div>
+
+        <!-- Sort & Filter Controls -->
+        <div id="sortControls" class="hidden px-4 mb-3">
+            <div class="flex space-x-2">
+                <select id="sortBy" class="flex-1 px-2 py-1 border rounded text-sm">
+                    <option value="price">Sort by Price</option>
+                    <option value="duration">Sort by Duration</option>
+                    <option value="departure">Sort by Departure</option>
+                </select>
+                <select id="classFilter" class="flex-1 px-2 py-1 border rounded text-sm">
+                    <option value="all">All Classes</option>
+                    <option value="economy">Economy</option>
+                    <option value="business">Business</option>
+                    <option value="first">First Class</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Flight Results -->
+        <div id="flightResults" class="px-4 space-y-3 max-h-60 overflow-y-auto"></div>
+
+        <!-- More Results Button -->
+        <div class="p-4">
+            <button 
+                id="moreResultsBtn" 
+                class="w-full bg-gray-200 text-gray-700 py-2 rounded-lg hover:bg-gray-300 transition-colors disabled:opacity-50"
+            >
+                See More Results
+            </button>
+        </div>
+    </div>
+
+    <!-- No Results -->
+    <div id="noResultsSection" class="hidden p-8 text-center">
+        <div class="text-gray-400 mb-2">✈️</div>
+        <p class="text-gray-600">No flights found for your search</p>
+        <p class="text-sm text-gray-500">Try adjusting your dates or destinations</p>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

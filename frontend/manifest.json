@@ -1,0 +1,45 @@
+{
+  "manifest_version": 3,
+  "name": "FlySnipe - Smart Flight Search",
+  "version": "1.0",
+  "description": "Smart flight search extension that detects flight queries and provides premium search features",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "identity"
+  ],
+  "host_permissions": [
+    "https://www.google.com/*",
+    "https://google.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.google.com/*", "https://google.com/*"],
+      "js": ["content.js"],
+      "css": ["content.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "FlySnipe",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["popup.html", "flysnipe.html", "premium.html", "success.html"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
