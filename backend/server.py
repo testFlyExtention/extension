@@ -245,28 +245,166 @@ async def check_premium(email: str):
     return {"email": email, "is_premium": user.get("is_premium", False)}
 
 @api_router.post("/create-checkout-session")
-async def create_checkout_session(request: Request):
+async def create_checkout_session(request: CheckoutRequest, http_request: Request):
     """Create Stripe checkout session for premium upgrade"""
-    body = await request.json()
-    email = body.get("email")
-    
-    if not email:
-        raise HTTPException(status_code=400, detail="Email required")
-    
-    # Mock Stripe session creation - replace with real Stripe integration
-    session_id = f"cs_mock_{uuid.uuid4()}"
-    checkout_url = f"https://checkout.stripe.com/pay/{session_id}"
-    
-    # Store pending upgrade
-    upgrade_record = {
-        "email": email,
-        "session_id": session_id,
-        "status": "pending",
-        "created_at": datetime.utcnow()
-    }
-    await db.premium_upgrades.insert_one(upgrade_record)
-    
-    return {"url": checkout_url, "session_id": session_id}
+    try:
+        global stripe_checkout
+        
+        if not stripe_api_key:
+            raise HTTPException(status_code=500, detail="Stripe not configured")
+        
+        # Initialize Stripe checkout if not already done
+        if not stripe_checkout:
+            host_url = str(http_request.base_url)
+            webhook_url = f"{host_url}api/webhook/stripe"
+            stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url=webhook_url)
+        
+        # Validate package
+        if request.package_id not in PREMIUM_PACKAGES:
+            raise HTTPException(status_code=400, detail="Invalid package ID")
+        
+        package = PREMIUM_PACKAGES[request.package_id]
+        
+        # Build URLs from request origin
+        origin_url = str(http_request.base_url).rstrip('/')
+        success_url = f"{origin_url}/success.html?session_id={{CHECKOUT_SESSION_ID}}"
+        cancel_url = f"{origin_url}/premium.html"
+        
+        # Create checkout session
+        checkout_request = CheckoutSessionRequest(
+            amount=package["price"],
+            currency=package["currency"],
+            success_url=success_url,
+            cancel_url=cancel_url,
+            metadata={
+                "package_id": request.package_id,
+                "email": request.email or "anonymous",
+                "description": package["description"]
+            }
+        )
+        
+        session: CheckoutSessionResponse = await stripe_checkout.create_checkout_session(checkout_request)
+        
+        # Store payment transaction
+        transaction = PaymentTransaction(
+            email=request.email or "anonymous",
+            package_id=request.package_id,
+            amount=package["price"],
+            currency=package["currency"],
+            session_id=session.session_id,
+            payment_status="pending",
+            metadata=checkout_request.metadata
+        )
+        
+        await db.payment_transactions.insert_one(transaction.dict())
+        
+        return {"url": session.url, "session_id": session.session_id}
+        
+    except Exception as e:
+        logging.error(f"Checkout session creation error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to create checkout session")
+
+@api_router.get("/payments/checkout/status/{session_id}")
+async def get_checkout_status(session_id: str):
+    """Get checkout session status"""
+    try:
+        if not stripe_checkout:
+            raise HTTPException(status_code=500, detail="Stripe not configured")
+        
+        # Get status from Stripe
+        checkout_status: CheckoutStatusResponse = await stripe_checkout.get_checkout_status(session_id)
+        
+        # Update local transaction
+        transaction = await db.payment_transactions.find_one({"session_id": session_id})
+        if transaction and transaction["payment_status"] != "completed":
+            if checkout_status.payment_status == "paid":
+                # Update transaction
+                await db.payment_transactions.update_one(
+                    {"session_id": session_id},
+                    {
+                        "$set": {
+                            "payment_status": "completed",
+                            "updated_at": datetime.utcnow()
+                        }
+                    }
+                )
+                
+                # Upgrade user to premium if email provided
+                if transaction["email"] != "anonymous":
+                    await db.users.update_one(
+                        {"email": transaction["email"]},
+                        {
+                            "$set": {
+                                "is_premium": True,
+                                "premium_activated_at": datetime.utcnow(),
+                                "subscription_type": transaction["package_id"]
+                            }
+                        },
+                        upsert=True
+                    )
+        
+        return {
+            "status": checkout_status.status,
+            "payment_status": checkout_status.payment_status,
+            "amount_total": checkout_status.amount_total,
+            "currency": checkout_status.currency,
+            "session_id": session_id
+        }
+        
+    except Exception as e:
+        logging.error(f"Checkout status error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to get checkout status")
+
+@api_router.post("/webhook/stripe")
+async def stripe_webhook(request: Request):
+    """Handle Stripe webhooks"""
+    try:
+        if not stripe_checkout:
+            raise HTTPException(status_code=500, detail="Stripe not configured")
+        
+        # Get raw body and signature
+        body = await request.body()
+        signature = request.headers.get("stripe-signature")
+        
+        if not signature:
+            raise HTTPException(status_code=400, detail="Missing Stripe signature")
+        
+        # Handle webhook
+        webhook_response = await stripe_checkout.handle_webhook(body, signature)
+        
+        if webhook_response.event_type == "checkout.session.completed":
+            # Update transaction and user
+            transaction = await db.payment_transactions.find_one({"session_id": webhook_response.session_id})
+            if transaction:
+                await db.payment_transactions.update_one(
+                    {"session_id": webhook_response.session_id},
+                    {
+                        "$set": {
+                            "payment_status": "completed",
+                            "updated_at": datetime.utcnow()
+                        }
+                    }
+                )
+                
+                # Upgrade user to premium
+                if transaction["email"] != "anonymous":
+                    await db.users.update_one(
+                        {"email": transaction["email"]},
+                        {
+                            "$set": {
+                                "is_premium": True,
+                                "premium_activated_at": datetime.utcnow(),
+                                "subscription_type": transaction["package_id"]
+                            }
+                        },
+                        upsert=True
+                    )
+        
+        return {"status": "success", "event_type": webhook_response.event_type}
+        
+    except Exception as e:
+        logging.error(f"Stripe webhook error: {str(e)}")
+        raise HTTPException(status_code=500, detail="Webhook processing failed")
 
 @api_router.get("/verify-session")
 async def verify_session(session_id: str):
