@@ -140,28 +140,29 @@ def generate_mock_flights(from_city: str, to_city: str, departure_date: str, pre
             hour=departure_hour, minute=random.randint(0, 59)
         ) + timedelta(minutes=duration_minutes)
         
-        flight = Flight(
-            airline=airline["code"],
-            flight_number=f"{airline['code']}{random.randint(100, 9999)}",
-            aircraft=random.choice(aircraft_types),
-            departure={
+        flight_data = {
+            "airline": airline["code"],
+            "flight_number": f"{airline['code']}{random.randint(100, 9999)}",
+            "aircraft": random.choice(aircraft_types),
+            "departure": {
                 "airport": f"{from_code}",
                 "city": from_city,
                 "time": f"{departure_hour:02d}:{random.randint(0, 59):02d}"
             },
-            arrival={
+            "arrival": {
                 "airport": f"{to_code}",
                 "city": to_city,
                 "time": f"{arrival_time.hour:02d}:{arrival_time.minute:02d}"
             },
-            duration=f"{duration_minutes // 60}h {duration_minutes % 60}m",
-            duration_minutes=duration_minutes,
-            price=base_price,
-            class_type=random.choice(class_types),
-            stops=random.choice([0, 0, 0, 1, 1, 2]),  # Mostly direct flights
-            baggage="1 checked bag included" if random.choice([True, False]) else None,
-            booking_url=f"https://www.example-airline.com/book/{uuid.uuid4()}"
-        )
+            "duration": f"{duration_minutes // 60}h {duration_minutes % 60}m",
+            "duration_minutes": duration_minutes,
+            "price": base_price,
+            "class": random.choice(class_types),
+            "stops": random.choice([0, 0, 0, 1, 1, 2]),  # Mostly direct flights
+            "baggage": "1 checked bag included" if random.choice([True, False]) else None,
+            "booking_url": f"https://www.example-airline.com/book/{uuid.uuid4()}"
+        }
+        flight = Flight(**flight_data)
         flights.append(flight)
     
     # Sort by price by default
