@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlySnipe - Flight Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .flight-card:hover { transform: translateY(-4px); transition: all 0.3s ease; }
+        .loading-spinner { animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .filter-active { background: #3B82F6; color: white; }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                        FlySnipe
+                    </h1>
+                    <span class="ml-2 px-2 py-1 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+                        Premium
+                    </span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div id="userInfo" class="text-sm text-gray-600"></div>
+                    <button id="backToSearch" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                        ← Back to Search
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Summary -->
+    <div class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div id="searchSummary" class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-900">Flight Results</h2>
+                    <p class="text-sm text-gray-600" id="searchDetails">Loading search details...</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-2xl font-bold text-blue-600" id="resultCount">-</p>
+                    <p class="text-sm text-gray-500">flights found</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters and Sort -->
+    <div class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex flex-wrap gap-4 items-center">
+                <!-- Sort Options -->
+                <div class="flex items-center space-x-2">
+                    <label class="text-sm font-medium text-gray-700">Sort by:</label>
+                    <select id="sortSelect" class="border border-gray-300 rounded-md px-3 py-1 text-sm focus:ring-2 focus:ring-blue-500">
+                        <option value="price">Price (Low to High)</option>
+                        <option value="price-desc">Price (High to Low)</option>
+                        <option value="duration">Duration (Shortest)</option>
+                        <option value="departure">Departure Time</option>
+                        <option value="arrival">Arrival Time</option>
+                    </select>
+                </div>
+
+                <!-- Class Filter -->
+                <div class="flex items-center space-x-2">
+                    <label class="text-sm font-medium text-gray-700">Class:</label>
+                    <div class="flex space-x-1">
+                        <button class="filter-btn px-3 py-1 text-xs rounded-full border" data-filter="class" data-value="all">All</button>
+                        <button class="filter-btn px-3 py-1 text-xs rounded-full border" data-filter="class" data-value="Economy">Economy</button>
+                        <button class="filter-btn px-3 py-1 text-xs rounded-full border" data-filter="class" data-value="Business">Business</button>
+                        <button class="filter-btn px-3 py-1 text-xs rounded-full border" data-filter="class" data-value="First Class">First</button>
+                    </div>
+                </div>
+
+                <!-- Stops Filter -->
+                <div class="flex items-center space-x-2">
+                    <label class="text-sm font-medium text-gray-700">Stops:</label>
+                    <div class="flex space-x-1">
+                        <button class="filter-btn px-3 py-1 text-xs rounded-full border" data-filter="stops" data-value="all">All</button>
+                        <button class="filter-btn px-3 py-1 text-xs rounded-full border" data-filter="stops" data-value="0">Direct</button>
+                        <button class="filter-btn px-3 py-1 text-xs rounded-full border" data-filter="stops" data-value="1">1 Stop</button>
+                        <button class="filter-btn px-3 py-1 text-xs rounded-full border" data-filter="stops" data-value="2+">2+ Stops</button>
+                    </div>
+                </div>
+
+                <!-- Price Range -->
+                <div class="flex items-center space-x-2">
+                    <label class="text-sm font-medium text-gray-700">Max Price:</label>
+                    <input type="range" id="priceRange" min="200" max="3000" value="3000" class="w-20">
+                    <span id="priceValue" class="text-sm text-gray-600">$3000</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <!-- Loading State -->
+        <div id="loadingSection" class="text-center py-12">
+            <div class="loading-spinner w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p class="text-gray-600">Loading flight results...</p>
+        </div>
+
+        <!-- Results -->
+        <div id="resultsSection" class="hidden">
+            <div id="flightGrid" class="space-y-4">
+                <!-- Flight cards will be inserted here -->
+            </div>
+
+            <!-- Load More -->
+            <div class="text-center mt-8">
+                <button id="loadMoreBtn" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50">
+                    Load More Results
+                </button>
+            </div>
+        </div>
+
+        <!-- No Results -->
+        <div id="noResultsSection" class="hidden text-center py-12">
+            <div class="text-gray-400 text-6xl mb-4">✈️</div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">No flights found</h3>
+            <p class="text-gray-600 mb-4">Try adjusting your filters or search criteria</p>
+            <button id="clearFiltersBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                Clear All Filters
+            </button>
+        </div>
+    </main>
+
+    <script src="flysnipe.js"></script>
+</body>
+</html>

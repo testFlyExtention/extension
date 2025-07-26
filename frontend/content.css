@@ -1,0 +1,44 @@
+/* Content script styles for FlySnipe */
+
+#flysnipe-icon {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Ensure the icon doesn't interfere with Google's layout */
+#flysnipe-icon * {
+    box-sizing: border-box;
+}
+
+/* Override any Google styles that might affect our icon */
+#flysnipe-icon {
+    all: initial;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    #flysnipe-icon > div {
+        right: 10px !important;
+        padding: 10px 14px !important;
+        font-size: 12px !important;
+    }
+    
+    #flysnipe-icon span:first-child {
+        font-size: 16px !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    #flysnipe-icon > div {
+        border: 2px solid white !important;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    #flysnipe-icon > div {
+        animation: none !important;
+        transition: none !important;
+    }
+}

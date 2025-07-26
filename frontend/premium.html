@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlySnipe Premium - Upgrade Your Flight Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .feature-card:hover { transform: translateY(-4px); transition: all 0.3s ease; }
+        .check-icon { color: #10B981; }
+        .premium-gradient { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    FlySnipe Premium
+                </h1>
+                <button id="backBtn" class="text-gray-600 hover:text-gray-800">
+                    ← Back
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="premium-gradient text-white py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold mb-4">Unlock Advanced Flight Search</h2>
+            <p class="text-xl opacity-90 mb-8">Get unlimited searches, advanced filters, and exclusive deals</p>
+            
+            <!-- Pricing -->
+            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-8 max-w-md mx-auto">
+                <div class="text-5xl font-bold mb-2">$9.99</div>
+                <div class="text-lg opacity-90 mb-6">per month</div>
+                <button id="upgradeBtn" class="w-full bg-white text-purple-600 font-bold py-3 px-6 rounded-xl hover:bg-gray-100 transition-colors text-lg">
+                    Upgrade to Premium
+                </button>
+                <p class="text-sm opacity-75 mt-4">Cancel anytime • 30-day money back guarantee</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Comparison -->
+    <section class="py-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-3xl font-bold text-center mb-12">Compare Plans</h3>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Free Plan -->
+                <div class="bg-white rounded-xl shadow-lg p-8">
+                    <div class="text-center mb-8">
+                        <h4 class="text-2xl font-bold text-gray-900 mb-2">Free</h4>
+                        <div class="text-3xl font-bold text-gray-600">$0</div>
+                        <div class="text-gray-500">forever</div>
+                    </div>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-center">
+                            <span class="check-icon text-xl mr-3">✓</span>
+                            <span>3 flight results per search</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="check-icon text-xl mr-3">✓</span>
+                            <span>Basic search functionality</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="check-icon text-xl mr-3">✓</span>
+                            <span>Google search integration</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <span class="text-xl mr-3">✗</span>
+                            <span>Advanced filters</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <span class="text-xl mr-3">✗</span>
+                            <span>Unlimited results</span>
+                        </li>
+                        <li class="flex items-center text-gray-400">
+                            <span class="text-xl mr-3">✗</span>
+                            <span>Price tracking</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Premium Plan -->
+                <div class="bg-gradient-to-br from-blue-600 to-purple-600 text-white rounded-xl shadow-xl p-8 relative">
+                    <div class="absolute top-4 right-4 bg-yellow-400 text-yellow-900 px-3 py-1 rounded-full text-xs font-bold">
+                        POPULAR
+                    </div>
+                    
+                    <div class="text-center mb-8">
+                        <h4 class="text-2xl font-bold mb-2">Premium</h4>
+                        <div class="text-3xl font-bold">$9.99</div>
+                        <div class="opacity-90">per month</div>
+                    </div>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex items-center">
+                            <span class="text-xl mr-3">✓</span>
+                            <span>Unlimited flight results</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-xl mr-3">✓</span>
+                            <span>Advanced filters & sorting</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-xl mr-3">✓</span>
+                            <span>Price tracking & alerts</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-xl mr-3">✓</span>
+                            <span>Multi-city search</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-xl mr-3">✓</span>
+                            <span>Exclusive deals access</span>
+                        </li>
+                        <li class="flex items-center">
+                            <span class="text-xl mr-3">✓</span>
+                            <span>Priority customer support</span>
+                        </li>
+                    </ul>
+                    
+                    <button id="premiumUpgradeBtn" class="w-full bg-white text-purple-600 font-bold py-3 mt-8 rounded-xl hover:bg-gray-100 transition-colors">
+                        Start Premium Trial
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Feature Details -->
+    <section class="bg-white py-16">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-3xl font-bold text-center mb-12">Premium Features</h3>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="feature-card text-center p-6">
+                    <div class="text-4xl mb-4">🔍</div>
+                    <h4 class="text-xl font-semibold mb-3">Advanced Search</h4>
+                    <p class="text-gray-600">Search by price range, duration, stops, airlines, and departure times with precise filters.</p>
+                </div>
+                
+                <div class="feature-card text-center p-6">
+                    <div class="text-4xl mb-4">📊</div>
+                    <h4 class="text-xl font-semibold mb-3">Price Tracking</h4>
+                    <p class="text-gray-600">Monitor price changes and get alerts when flights drop to your target price.</p>
+                </div>
+                
+                <div class="feature-card text-center p-6">
+                    <div class="text-4xl mb-4">⚡</div>
+                    <h4 class="text-xl font-semibold mb-3">Unlimited Results</h4>
+                    <p class="text-gray-600">See all available flights from multiple airlines and booking sites in one place.</p>
+                </div>
+                
+                <div class="feature-card text-center p-6">
+                    <div class="text-4xl mb-4">🌍</div>
+                    <h4 class="text-xl font-semibold mb-3">Multi-City Search</h4>
+                    <p class="text-gray-600">Plan complex trips with multiple destinations and stopover options.</p>
+                </div>
+                
+                <div class="feature-card text-center p-6">
+                    <div class="text-4xl mb-4">💎</div>
+                    <h4 class="text-xl font-semibold mb-3">Exclusive Deals</h4>
+                    <p class="text-gray-600">Access premium-only deals and discounts from partner airlines.</p>
+                </div>
+                
+                <div class="feature-card text-center p-6">
+                    <div class="text-4xl mb-4">🎧</div>
+                    <h4 class="text-xl font-semibold mb-3">Priority Support</h4>
+                    <p class="text-gray-600">Get fast, dedicated customer support for all your travel needs.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h3 class="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h3>
+            
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-lg">
+                    <h4 class="font-semibold mb-2">Can I cancel my subscription anytime?</h4>
+                    <p class="text-gray-600">Yes! You can cancel your Premium subscription at any time. You'll continue to have access to Premium features until the end of your billing period.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg">
+                    <h4 class="font-semibold mb-2">Do you offer a free trial?</h4>
+                    <p class="text-gray-600">Yes! We offer a 7-day free trial for new Premium subscribers. No commitment required.</p>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg">
+                    <h4 class="font-semibold mb-2">How does price tracking work?</h4>
+                    <p class="text-gray-600">Set your desired price for any route, and we'll monitor prices across multiple airlines and notify you when prices drop to your target.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="premium-gradient text-white py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h3 class="text-3xl font-bold mb-4">Ready to upgrade your flight search?</h3>
+            <p class="text-xl opacity-90 mb-8">Join thousands of travelers saving time and money with FlySnipe Premium</p>
+            <button id="finalUpgradeBtn" class="bg-white text-purple-600 font-bold py-4 px-8 rounded-xl hover:bg-gray-100 transition-colors text-lg">
+                Start Your Premium Journey
+            </button>
+        </div>
+    </section>
+
+    <script src="premium.js"></script>
+</body>
+</html>
