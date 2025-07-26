@@ -26,6 +26,17 @@ app = FastAPI(title="FlySnipe API", version="1.0.0")
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Initialize Stripe checkout
+stripe_api_key = os.environ.get('STRIPE_API_KEY')
+if stripe_api_key:
+    stripe_checkout = None  # Will be initialized when needed
+
+# Payment packages
+PREMIUM_PACKAGES = {
+    "monthly": {"price": 9.99, "currency": "usd", "description": "Monthly Premium Subscription"},
+    "yearly": {"price": 99.99, "currency": "usd", "description": "Yearly Premium Subscription (Save 20%)"}
+}
+
 # Models
 class StatusCheck(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
